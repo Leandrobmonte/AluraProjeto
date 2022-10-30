@@ -75,7 +75,9 @@ public class PedidoService {
         }
         produtosOptional.stream().forEach(y -> {
             Produto produto = y.get();
+            //TODO: verificar se a quatindade solicitada é maior que a de estoque do produto
             if(y.get().getQuantidadeEstoque() == 0){
+                //TODO: pedir acima do estoque
                 throw new BussinesException(String.format("Produto %s sem estoque.", produto.getNome()));
             }
             produtos.add(produto);
@@ -88,17 +90,19 @@ public class PedidoService {
         Boolean descontoPorQuantidade = pedidoInputDto.getItemPedidos().stream().anyMatch(prodQtd -> prodQtd.getQuantidadeVendida() > MINIMO_DE_QUANTIDADE_ITEMS_PRODUTOS_PARA_DESCONTO);
         Boolean descontoPorFidelidade = pedidoRepository.countByClienteId(pedidoInputDto.getClienteId()) >= MINIMO_DE_PEDIDO_PARA_FIDELIDADE;
 
-        pedido.setDesconto( BigDecimal.valueOf(0.0));
+        pedido.setDesconto(BigDecimal.valueOf(0.0));
         pedido.setCliente(clienteService.clientePorId(pedidoInputDto.getClienteId()).get());
         pedido.setTipoDesconto(TipoDesconto.NENHUM);
 
         //Valida descontos
         if(descontoPorQuantidade && !descontoPorFidelidade){
             pedido.setDesconto(BigDecimal.valueOf(DEZ_PORCENTO));
-        }if(descontoPorFidelidade && !descontoPorQuantidade){
+        }
+        if(descontoPorFidelidade && !descontoPorQuantidade){
             pedido.setDesconto(BigDecimal.valueOf(CINCO_PORCENTO));
             pedido.setTipoDesconto(TipoDesconto.FIDELIDADE);
-        }if(descontoPorQuantidade && descontoPorQuantidade){
+        }
+        if(descontoPorFidelidade && descontoPorQuantidade){
             pedido.setDesconto(BigDecimal.valueOf(CINCO_PORCENTO).add(BigDecimal.valueOf(DEZ_PORCENTO)));
             pedido.setTipoDesconto(TipoDesconto.FIDELIDADE);
         }
