@@ -58,6 +58,7 @@ public class PedidoService {
             Pedido pedido = this.validaDescontosDoPedido(pedidoInputDto);
             List<ItemDePedido> listaItemDePedido = this.emitirItemPedido(pedidoInputDto, produtos, pedido);
             pedidoRepository.save(pedido);
+            produtoRepository.saveAll(produtos);
             for (ItemDePedido itemPedido : listaItemDePedido) {
                 itemDePedidosService.salvar(itemPedido);
             }
@@ -73,15 +74,21 @@ public class PedidoService {
         for(ItemPedidoDto itemPedidoDto : pedidoInputDto.getItemPedidos()){
             produtosOptional.add(produtoRepository.findById(itemPedidoDto.getProdutoId()));
         }
-        produtosOptional.stream().forEach(y -> {
-            Produto produto = y.get();
-            //TODO: verificar se a quatindade solicitada é maior que a de estoque do produto
-            if(y.get().getQuantidadeEstoque() == 0){
-                //TODO: pedir acima do estoque
-                throw new BussinesException(String.format("Produto %s sem estoque.", produto.getNome()));
+        produtosOptional.stream().forEach(produtoOptional -> {
+            if(produtoOptional.isPresent()){
+                Produto produto = produtoOptional.get();
+                for(ItemPedidoDto prodPedido:pedidoInputDto.getItemPedidos()){
+                    if(prodPedido.getProdutoId() == produto.getId()){
+                        if( produto.getQuantidadeEstoque() < prodPedido.getQuantidadeVendida()){
+                            throw new BussinesException(String.format("Produto %s sem estoque suficiente.", produto.getNome()));
+                        }
+                        produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - prodPedido.getQuantidadeVendida());
+                        produtos.add(produto);
+                    }
+                }
             }
-            produtos.add(produto);
         });
+
         return produtos;
     }
 
