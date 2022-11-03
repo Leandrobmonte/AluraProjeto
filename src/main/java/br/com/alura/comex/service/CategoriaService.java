@@ -2,9 +2,11 @@ package br.com.alura.comex.service;
 
 import br.com.alura.comex.config.ExceptionEntidadeNaoEncontrada;
 import br.com.alura.comex.model.Categoria;
+import br.com.alura.comex.model.StatusCategoria;
 import br.com.alura.comex.model.dto.input.CategoriaInputDto;
 import br.com.alura.comex.model.dto.input.CategoriaUpdateInputDto;
 import br.com.alura.comex.model.dto.output.CategoriaOutputDto;
+import br.com.alura.comex.model.dto.output.CategoriaStatusOutput;
 import br.com.alura.comex.repository.CategoriaRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -70,5 +73,13 @@ public class CategoriaService {
     public void remover(Long id) {
         this.buscaPorId(id);
         categoriaRepository.deleteById(id);
+    }
+
+    @Transactional
+    public CategoriaStatusOutput ativaDesativaCategoria(Long id) {
+        Categoria categoria = buscarOuFalhar(id);
+        StatusCategoria statusCategoria = categoria.getStatus();
+        categoria.setStatus(statusCategoria.equals(StatusCategoria.ATIVA) ? StatusCategoria.INATIVA : StatusCategoria.ATIVA);
+        return new CategoriaStatusOutput(categoriaRepository.save(categoria));
     }
 }

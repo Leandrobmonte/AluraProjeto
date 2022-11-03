@@ -9,6 +9,7 @@ import br.com.alura.comex.service.PedidoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categorias")
@@ -66,5 +68,11 @@ public class CategoriaController {
     public List<PedidoProjecao> relatorioPedidosPorCategoria(){
         return  pedidoService.pedidosPorCategoria();
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> ativarDesativarCategoria(@PathVariable Long id){
+        return ResponseEntity.ok().body(categoriaService.ativaDesativaCategoria(id));
+    }
+
 
 }

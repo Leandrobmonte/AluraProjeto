@@ -9,9 +9,12 @@ import br.com.alura.comex.model.TipoDescontoItem;
 import br.com.alura.comex.model.dto.input.ItemPedidoDto;
 import br.com.alura.comex.model.dto.input.PedidoInputDto;
 import br.com.alura.comex.model.dto.output.PedidoNovoOutputDto;
+import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.model.dto.projecao.PedidoProjecao;
 import br.com.alura.comex.repository.PedidoRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,6 +139,11 @@ public class PedidoService {
             }
         }
         return listaItemDePedido;
+    }
+
+    public Page<PedidoOutputDto> listaPedidos(Pageable paginacao) {
+        Page<Pedido> pedidos = pedidoRepository.findAll(paginacao);
+        return PedidoOutputDto.converter(pedidos);
     }
 
 }
