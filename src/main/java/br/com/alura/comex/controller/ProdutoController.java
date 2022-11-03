@@ -3,6 +3,7 @@ package br.com.alura.comex.controller;
 import br.com.alura.comex.model.dto.input.ProdutoInputDto;
 import br.com.alura.comex.model.dto.output.ProdutoOutputDto;
 import br.com.alura.comex.service.ProdutoService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<ProdutoOutputDto> inserir(@RequestBody @Valid ProdutoInputDto produtoInputDto, UriComponentsBuilder uriBuilder){
         ProdutoOutputDto produtoOutputDto =produtoService.cadastrar(produtoInputDto);
         URI uri = uriBuilder.path("/produtos/{id}").buildAndExpand(produtoOutputDto.getId()).toUri();

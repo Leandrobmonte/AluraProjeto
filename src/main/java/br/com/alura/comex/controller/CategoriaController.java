@@ -6,6 +6,9 @@ import br.com.alura.comex.model.dto.output.CategoriaOutputDto;
 import br.com.alura.comex.model.dto.projecao.PedidoProjecao;
 import br.com.alura.comex.service.CategoriaService;
 import br.com.alura.comex.service.PedidoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,20 +24,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-    private final CategoriaService categoriaService;
+    @Autowired
+    private CategoriaService categoriaService;
 
-    private final PedidoService pedidoService;
-
-    public CategoriaController(CategoriaService categoriaService, PedidoService pedidoService) {
-        this.categoriaService = categoriaService;
-        this.pedidoService = pedidoService;
-    }
+    @Autowired
+    private PedidoService pedidoService;
 
     @GetMapping
     public List<CategoriaOutputDto> listarTodos(){
@@ -47,6 +46,7 @@ public class CategoriaController {
     }
 
     @PostMapping
+    @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<CategoriaOutputDto> inserir(@RequestBody @Valid CategoriaInputDto categoriaInputDto, UriComponentsBuilder uriBuilder){
         CategoriaOutputDto categoriaOutputDto = categoriaService.cadastrar(categoriaInputDto);
         URI uri = uriBuilder.path("/categorias/{id}").buildAndExpand(categoriaOutputDto.getId()).toUri();
@@ -54,17 +54,20 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<CategoriaOutputDto> atualizar(@PathVariable Long id, @RequestBody @Valid CategoriaUpdateInputDto categoriaUpdateInputDto){
         return ResponseEntity.ok(categoriaService.atualizar(id,categoriaUpdateInputDto));
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<?> remover(@PathVariable Long id){
         categoriaService.remover(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/pedidos")
+    @Cacheable(value = "listaCategoriasPedidos")
     public List<PedidoProjecao> relatorioPedidosPorCategoria(){
         return  pedidoService.pedidosPorCategoria();
     }

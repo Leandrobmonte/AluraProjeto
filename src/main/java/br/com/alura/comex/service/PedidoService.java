@@ -13,6 +13,7 @@ import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.model.dto.projecao.PedidoProjecao;
 import br.com.alura.comex.repository.PedidoRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

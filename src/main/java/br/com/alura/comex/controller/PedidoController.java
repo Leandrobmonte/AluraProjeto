@@ -4,6 +4,8 @@ import br.com.alura.comex.model.dto.input.PedidoInputDto;
 import br.com.alura.comex.model.dto.output.PedidoNovoOutputDto;
 import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.service.PedidoService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,6 +38,7 @@ public class PedidoController {
         return pedidoService.listaPedidos(paginacao);
     }
     @PostMapping
+    @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<PedidoNovoOutputDto> inserir(@RequestBody @Valid PedidoInputDto pedidoInputDto, UriComponentsBuilder uriBuilder){
         PedidoNovoOutputDto pedidoNovoOutputDto = pedidoService.cadastrar(pedidoInputDto);
         URI uri = uriBuilder.path("/pedidos/{id}").buildAndExpand(pedidoNovoOutputDto.getId()).toUri();
