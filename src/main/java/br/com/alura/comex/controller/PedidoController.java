@@ -1,6 +1,7 @@
 package br.com.alura.comex.controller;
 
 import br.com.alura.comex.model.dto.input.PedidoInputDto;
+import br.com.alura.comex.model.dto.output.PedidoDetalheOutputDto;
 import br.com.alura.comex.model.dto.output.PedidoNovoOutputDto;
 import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.service.PedidoService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.List;
 
@@ -32,11 +34,18 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-
     @GetMapping
     public Page<PedidoOutputDto> lista( @PageableDefault(sort="data",direction = Sort.Direction.DESC, page = 0, size = 5) Pageable paginacao) {
         return pedidoService.listaPedidos(paginacao);
     }
+
+    @GetMapping("/{id}")
+    public Page<PedidoDetalheOutputDto> detalhePedido(@PathParam("id") Long id)
+    {
+
+        return null;
+    }
+
     @PostMapping
     @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<PedidoNovoOutputDto> inserir(@RequestBody @Valid PedidoInputDto pedidoInputDto, UriComponentsBuilder uriBuilder){

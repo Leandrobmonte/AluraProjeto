@@ -1,6 +1,6 @@
 package br.com.alura.comex.service;
 
-import br.com.alura.comex.config.ExceptionEntidadeNaoEncontrada;
+import br.com.alura.comex.config.exception.ExceptionEntidadeNaoEncontrada;
 import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.dto.input.ClienteInputDto;
 import br.com.alura.comex.model.dto.output.ClienteListaOutputDto;

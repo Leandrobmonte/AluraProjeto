@@ -1,6 +1,6 @@
 package br.com.alura.comex.service;
 
-import br.com.alura.comex.config.BussinesException;
+import br.com.alura.comex.config.exception.BussinesException;
 import br.com.alura.comex.model.ItemDePedido;
 import br.com.alura.comex.model.Pedido;
 import br.com.alura.comex.model.Produto;
@@ -13,7 +13,6 @@ import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.model.dto.projecao.PedidoProjecao;
 import br.com.alura.comex.repository.PedidoRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

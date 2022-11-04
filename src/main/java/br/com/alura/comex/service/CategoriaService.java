@@ -1,6 +1,6 @@
 package br.com.alura.comex.service;
 
-import br.com.alura.comex.config.ExceptionEntidadeNaoEncontrada;
+import br.com.alura.comex.config.exception.ExceptionEntidadeNaoEncontrada;
 import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.StatusCategoria;
 import br.com.alura.comex.model.dto.input.CategoriaInputDto;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoriaService {

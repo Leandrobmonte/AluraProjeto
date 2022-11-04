@@ -1,4 +1,4 @@
-package br.com.alura.comex.config;
+package br.com.alura.comex.config.exception;
 
 public class ExceptionEntidadeNaoEncontrada extends RuntimeException{
 

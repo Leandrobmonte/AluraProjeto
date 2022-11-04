@@ -1,4 +1,4 @@
-package br.com.alura.comex.config;
+package br.com.alura.comex.config.exception;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
