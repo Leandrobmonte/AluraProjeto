@@ -54,13 +54,15 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-//        web.ignoring()
-//                .antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
+        web.ignoring()
+                .antMatchers("/**.html", "/v3/api-docs", "/v3/api-docs/*",
+                        "/webjars/**", "/configuration/**", "/swagger-resources/**",
+                        "/swagger-ui/**.html", "/**/**.css", "/swagger-ui/**.js","/swagger-ui/**.png");
+
     }
 
 //    public static void main(String[] args){
 //        System.out.println(new BCryptPasswordEncoder().encode("12345678"));
 //    }
-
 
 }

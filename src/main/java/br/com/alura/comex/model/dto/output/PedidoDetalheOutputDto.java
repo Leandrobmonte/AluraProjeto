@@ -1,5 +1,6 @@
 package br.com.alura.comex.model.dto.output;
 
+import br.com.alura.comex.model.ItemDePedido;
 import br.com.alura.comex.model.Pedido;
 
 import java.math.BigDecimal;
@@ -15,11 +16,12 @@ public class PedidoDetalheOutputDto {
     private ClienteOutputDto cliente;
 
     public PedidoDetalheOutputDto(Pedido pedido) {
+        PedidoOutputDto pedidoOutputDto = new PedidoOutputDto(pedido);
         this.dataDoPedido = pedido.getData();
-        this.valor = valor;
-        this.descontos = descontos;
-        this.itensDePedido = itensDePedido;
-        this.cliente = cliente;
+        this.valor = pedidoOutputDto.getValorPedido();
+        this.descontos = pedidoOutputDto.getDesconto();
+        this.itensDePedido = ItemDoPedidoOutputDto.converter(pedido.getItens());
+        this.cliente = new ClienteOutputDto(pedido.getCliente());
     }
 
     public LocalDate getDataDoPedido() {

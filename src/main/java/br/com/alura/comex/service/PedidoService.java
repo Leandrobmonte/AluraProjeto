@@ -1,6 +1,8 @@
 package br.com.alura.comex.service;
 
 import br.com.alura.comex.config.exception.BussinesException;
+import br.com.alura.comex.config.exception.ExceptionEntidadeNaoEncontrada;
+import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.ItemDePedido;
 import br.com.alura.comex.model.Pedido;
 import br.com.alura.comex.model.Produto;
@@ -8,6 +10,7 @@ import br.com.alura.comex.model.TipoDesconto;
 import br.com.alura.comex.model.TipoDescontoItem;
 import br.com.alura.comex.model.dto.input.ItemPedidoDto;
 import br.com.alura.comex.model.dto.input.PedidoInputDto;
+import br.com.alura.comex.model.dto.output.PedidoDetalheOutputDto;
 import br.com.alura.comex.model.dto.output.PedidoNovoOutputDto;
 import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.model.dto.projecao.PedidoProjecao;
@@ -34,6 +37,9 @@ public class PedidoService {
     private static final Integer MINIMO_DE_QUANTIDADE_ITEMS_PRODUTOS_PARA_DESCONTO = 10;
     private static final Double DEZ_PORCENTO = 0.1;
     private static final Double CINCO_PORCENTO = 0.05;
+
+    private static final String MSG_PEDIDO_NAO_ENCONTRADO
+            = "Não existe um cadastro de categoria com o código %d";
 
 
 
@@ -146,4 +152,20 @@ public class PedidoService {
         return PedidoOutputDto.converter(pedidos);
     }
 
+    public PedidoDetalheOutputDto detalharPedido(Long id) {
+        Pedido pedido = this.buscarOuFalhar(id);
+        PedidoDetalheOutputDto pedidoOutputDto = new PedidoDetalheOutputDto(pedido);
+
+        return pedidoOutputDto;
+    }
+
+    public Pedido buscarOuFalhar(Long pedidoId){
+        return pedidoRepository
+                .findById(pedidoId)
+                .orElseThrow(() ->
+                        new ExceptionEntidadeNaoEncontrada(
+                                String.format(MSG_PEDIDO_NAO_ENCONTRADO, pedidoId)
+                        )
+                );
+    }
 }

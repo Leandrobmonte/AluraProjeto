@@ -14,8 +14,6 @@ import java.util.List;
 
 public class PedidoOutputDto {
 
-    @JsonIgnore
-    private Long id;
     private LocalDate dataPedido;
     private BigDecimal valorPedido;
     private BigDecimal desconto;
@@ -23,12 +21,11 @@ public class PedidoOutputDto {
     private ClienteOutputDto cliente;
 
     public PedidoOutputDto(Pedido pedido) {
-        this.id = pedido.getId();
         this.dataPedido = pedido.getData();
+        this.valorPedido = somaTotalPedido(pedido.getItens());
         this.cliente = new ClienteOutputDto(pedido.getCliente());
         this.qtdProdutosVendidos = somaDeQtdDoItemPedidos(pedido.getItens());
         this.desconto = somaDescontosItensPedido(pedido.getItens());
-        this.valorPedido = somaTotalPedido(pedido.getItens());
     }
 
     public static Page<PedidoOutputDto> converter(Page<Pedido> pedidos) {
@@ -59,10 +56,6 @@ public class PedidoOutputDto {
             produtosVendidos.add(soma);
         }
         return produtosVendidos;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public LocalDate getDataPedido() {

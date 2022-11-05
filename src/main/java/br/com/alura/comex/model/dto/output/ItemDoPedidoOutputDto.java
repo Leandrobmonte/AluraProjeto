@@ -1,9 +1,13 @@
 package br.com.alura.comex.model.dto.output;
 
 import br.com.alura.comex.model.Categoria;
+import br.com.alura.comex.model.Cliente;
+import br.com.alura.comex.model.ItemDePedido;
 import br.com.alura.comex.model.Produto;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemDoPedidoOutputDto {
 
@@ -16,15 +20,19 @@ public class ItemDoPedidoOutputDto {
     private BigDecimal valorPago;
     private BigDecimal desconto;
 
-    public ItemDoPedidoOutputDto(Categoria categoria, Produto produto) {
-        this.id = id;
-        this.produtoId = produtoId;
-        this.nomeProduto = nomeProduto;
-        this.nomeCategoria = nomeCategoria;
-        this.quantidade = quantidade;
-        this.precoUnitario = precoUnitario;
-        this.valorPago = valorPago;
-        this.desconto = desconto;
+    public ItemDoPedidoOutputDto(ItemDePedido itemDePedido) {
+        this.id = itemDePedido.getId();
+        this.produtoId = itemDePedido.getProdutoId().getId();
+        this.nomeProduto = itemDePedido.getProdutoId().getNome();
+        this.nomeCategoria = itemDePedido.getProdutoId().getCategoria().getNome();
+        this.quantidade = itemDePedido.getQuantidade();
+        this.precoUnitario = itemDePedido.getPrecoUnitario();
+        this.valorPago = somaPagamentoComDesconto(itemDePedido);
+        this.desconto = itemDePedido.getDesconto();
+    }
+
+    private BigDecimal somaPagamentoComDesconto(ItemDePedido item){
+        return item.getPrecoUnitario().subtract(item.getDesconto());
     }
 
     public Long getId() {
@@ -58,4 +66,9 @@ public class ItemDoPedidoOutputDto {
     public BigDecimal getDesconto() {
         return desconto;
     }
+
+    public static List<ItemDoPedidoOutputDto> converter(List<ItemDePedido> itens){
+        return itens.stream().map(ItemDoPedidoOutputDto::new).collect(Collectors.toList());
+    }
+
 }
