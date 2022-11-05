@@ -6,7 +6,6 @@ import br.com.alura.comex.model.dto.output.PedidoNovoOutputDto;
 import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.service.PedidoService;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,9 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")

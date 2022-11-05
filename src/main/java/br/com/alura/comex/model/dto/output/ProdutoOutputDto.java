@@ -1,6 +1,7 @@
 package br.com.alura.comex.model.dto.output;
 
 import br.com.alura.comex.model.Produto;
+import br.com.alura.comex.validation.categoria.ValidateIdCategoria;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public class ProdutoOutputDto {
     private BigDecimal precoUnitario;
     private String descricao;
     private Integer quantidadeEstoque;
+    @ValidateIdCategoria
     private Long categoriaId;
     private String categoriaNome;
     public ProdutoOutputDto(Produto produto) {
