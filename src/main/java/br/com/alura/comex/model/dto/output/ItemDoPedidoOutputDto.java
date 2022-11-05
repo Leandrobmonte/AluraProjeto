@@ -1,9 +1,6 @@
 package br.com.alura.comex.model.dto.output;
 
-import br.com.alura.comex.model.Categoria;
-import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.ItemDePedido;
-import br.com.alura.comex.model.Produto;
 
 import java.math.BigDecimal;
 import java.util.List;

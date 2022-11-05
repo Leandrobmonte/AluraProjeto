@@ -2,12 +2,12 @@ package br.com.alura.comex.service;
 
 import br.com.alura.comex.config.exception.BussinesException;
 import br.com.alura.comex.config.exception.ExceptionEntidadeNaoEncontrada;
-import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.ItemDePedido;
 import br.com.alura.comex.model.Pedido;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.TipoDesconto;
 import br.com.alura.comex.model.TipoDescontoItem;
+import br.com.alura.comex.model.Usuario;
 import br.com.alura.comex.model.dto.input.ItemPedidoDto;
 import br.com.alura.comex.model.dto.input.PedidoInputDto;
 import br.com.alura.comex.model.dto.output.PedidoDetalheOutputDto;
@@ -16,6 +16,7 @@ import br.com.alura.comex.model.dto.output.PedidoOutputDto;
 import br.com.alura.comex.model.dto.projecao.PedidoProjecao;
 import br.com.alura.comex.repository.PedidoRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
+import br.com.alura.comex.repository.UsuarioRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ClienteService clienteService;
     private final ItemDePedidosService itemDePedidosService;
     private static final Integer MINIMO_DE_PEDIDO_PARA_FIDELIDADE = 5;
@@ -42,14 +44,14 @@ public class PedidoService {
             = "Não existe um cadastro de categoria com o código %d";
 
 
-
-
     public PedidoService(PedidoRepository pedidoRepository,
                          ProdutoRepository produtoRepository,
+                         UsuarioRepository usuarioRepository,
                          ClienteService clienteService,
                          ItemDePedidosService itemDePedidosService) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
+        this.usuarioRepository = usuarioRepository;
         this.clienteService = clienteService;
         this.itemDePedidosService = itemDePedidosService;
     }
@@ -152,11 +154,18 @@ public class PedidoService {
         return PedidoOutputDto.converter(pedidos);
     }
 
-    public PedidoDetalheOutputDto detalharPedido(Long id) {
+    public PedidoDetalheOutputDto detalharPedido(Long id, Usuario logado) {
         Pedido pedido = this.buscarOuFalhar(id);
         PedidoDetalheOutputDto pedidoOutputDto = new PedidoDetalheOutputDto(pedido);
-
+        validarUsuario(logado, pedido);
         return pedidoOutputDto;
+    }
+
+    private void validarUsuario(Usuario logado, Pedido pedido) {
+        Usuario usuario = pedido.getCliente().getUsuario();
+        if(logado.getId() != usuario.getId()){
+            throw new BussinesException("Este pedido pertence a outro usuário");
+        }
     }
 
     public Pedido buscarOuFalhar(Long pedidoId){

@@ -2,14 +2,11 @@ package br.com.alura.comex.model.dto.output;
 
 import br.com.alura.comex.model.ItemDePedido;
 import br.com.alura.comex.model.Pedido;
-import br.com.alura.comex.repository.ProdutoRepository;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PedidoOutputDto {
