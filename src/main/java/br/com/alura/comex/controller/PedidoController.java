@@ -41,8 +41,7 @@ public class PedidoController {
     }
 
     @GetMapping("/{id}")
-    public PedidoDetalheOutputDto detalhePedido(@PathVariable("id") Long id)
-    {
+    public PedidoDetalheOutputDto detalhePedido(@PathVariable("id") Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Usuario> logado = (Optional<Usuario>) authentication.getPrincipal();
         return pedidoService.detalharPedido(id, logado.get());
